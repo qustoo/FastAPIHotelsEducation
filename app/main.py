@@ -3,6 +3,8 @@ from typing import Optional
 from datetime import date
 from pydantic import BaseModel
 
+from app.bookings.router import router as router_bookings
+
 
 class SchemaHotel(BaseModel):
     address: str
@@ -11,6 +13,9 @@ class SchemaHotel(BaseModel):
     has_spa: bool
 
 app = FastAPI()
+
+
+app.include_router(router_bookings)
 
 @app.get('/hotels')
 def get_hotels(location : str,
