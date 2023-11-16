@@ -2,7 +2,7 @@ from datetime import date
 from app.hotels.rooms.models import Rooms
 from app.database import async_session_maker,engine
 from app.bookings.models import Bookings
-from sqlalchemy import func, insert, select,and_,or_
+from sqlalchemy import func, insert, select,and_,or_,delete
 from app.dao.base import BaseDAO
 
 class BookingDAO(BaseDAO):
