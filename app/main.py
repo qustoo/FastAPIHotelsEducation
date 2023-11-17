@@ -5,6 +5,11 @@ from datetime import date
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 
+from fastapi_cache import FastAPICache
+from fastapi_cache.backends.redis import RedisBackend
+from fastapi_cache.decorator import cache
+
+from redis import asyncio as aioredis
 
 from app.bookings.router import router as router_bookings
 from app.users.router import router as router_users
@@ -37,3 +42,8 @@ app.add_middleware(
     allow_methods=["GET","POST","OPTION","DELETE","PATCH","PUT"],
     allow_headers=["Content-Type","Set-Cookie","Access-Control-Allow-Origin","Access-Control-Allow-Headers", "Authorization"],
 )
+
+@app.on_event("startup")
+async def startup():
+    redis = aioredis.from_url("redis://localhost")
+    FastAPICache.init(RedisBackend(redis), prefix="cache")
