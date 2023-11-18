@@ -24,6 +24,8 @@ async def add_booking(
     room_id : int, date_from : date, date_to: date,
     user : Users = Depends(get_current_user)):
     booking =await BookingDAO.add(user["Users"].id,room_id,date_from,date_to)
+    # вариант с встроенным BackgroundTasks
+    background_tasks.add_task()
     if not booking:
         raise RoomCannotBeBooked 
     
