@@ -43,6 +43,9 @@ app.add_middleware(
     allow_headers=["Content-Type","Set-Cookie","Access-Control-Allow-Origin","Access-Control-Allow-Headers", "Authorization"],
 )
 
+
+
+
 @app.on_event("startup")
 async def startup():
     redis = aioredis.from_url("redis://localhost")
