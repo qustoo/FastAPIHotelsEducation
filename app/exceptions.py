@@ -34,3 +34,12 @@ class UserIsNotPresentException(BookingException):
 class RoomCannotBeBooked(BookingException):
     status_code=status.HTTP_409_CONFLICT
     detail='room cannt be booked'
+
+class IsToLongPeriodToBooked(BookingException):
+    status_code=status.HTTP_400_BAD_REQUEST
+    detail="you cannot booked room more then 1 mounth"
+    
+class ErrorOrderOfDates(BookingException):
+    status_code=status.HTTP_400_BAD_REQUEST
+    detail="Incorrect order of dates"
+    

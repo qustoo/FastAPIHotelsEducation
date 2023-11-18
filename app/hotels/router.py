@@ -1,7 +1,8 @@
 import asyncio
-from datetime import date
+from datetime import date, datetime
 from typing import List
 from fastapi import APIRouter, Depends, Request
+from app.exceptions import ErrorOrderOfDates,IsToLongPeriodToBooked
 from app.hotels.schemas import SHotel
 from fastapi_cache.decorator import cache
 
@@ -17,8 +18,12 @@ async def get_hotels():
 
 
 @router.get("/bylocation")
-@cache(expire=60)
+#@cache(expire=60)
 async def get_hotels_by_location( location: str, date_from: date, date_to: date):
-    await asyncio.sleep(2) # в первый раз будем ждать, затем результат кэшируется и ответ моментальный в течении 60 секунд
+    if date_from > date_to:
+        raise ErrorOrderOfDates
+    if (date_to - date_from).days > 31:
+        raise IsToLongPeriodToBooked
+    #await asyncio.sleep(2) # в первый раз будем ждать, затем результат кэшируется и ответ моментальный в течении 60 секунд
     hotels = await HotelDAO.get_hotels_by_location(location,date_from,date_to)
     return hotels
