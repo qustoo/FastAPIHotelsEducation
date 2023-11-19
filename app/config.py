@@ -4,6 +4,7 @@ from pydantic import root_validator
 
 class Settings(BaseSettings):
     MODE : Literal["DEV","TEST","PROD"]
+    LOG_LEVEL : Literal["DEBUG","INFO"]
 
     DB_HOST : str
     DB_PORT : int
