@@ -11,6 +11,7 @@ from fastapi_cache.decorator import cache
 from pydantic import BaseModel
 from redis import asyncio as aioredis
 from sqladmin import Admin
+from fastapi_versioning import VersionedFastAPI, version
 
 from app.admin.auth import authentication_backend
 from app.admin.views import BookingsAdmin, HotelsAdmin, RoomsAdmin, UsersAdmin
@@ -25,6 +26,18 @@ from app.users.router import router as router_users
 from app.logger import logger
 
 app = FastAPI()
+
+
+app = VersionedFastAPI(app,
+    version_format='{major}',
+    prefix_format='/v{major}',
+    #description='Greet users with a nice message',
+    # middleware=[
+    #     Middleware(SessionMiddleware, secret_key='mysecretkey')
+    # ]
+)
+
+
 
 admin = Admin(app,engine,authentication_backend=authentication_backend)
 admin.add_view(UsersAdmin)
