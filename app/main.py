@@ -12,6 +12,7 @@ from pydantic import BaseModel
 from redis import asyncio as aioredis
 from sqladmin import Admin
 from fastapi_versioning import VersionedFastAPI, version
+from prometheus_fastapi_instrumentator import Instrumentator
 
 from app.admin.auth import authentication_backend
 from app.admin.views import BookingsAdmin, HotelsAdmin, RoomsAdmin, UsersAdmin
@@ -21,6 +22,7 @@ from app.hotels.rooms.router import router as router_rooms
 from app.hotels.router import router as router_hotels
 from app.images.router import router as router_images
 from app.pages.router import router as router_pages
+from app.prometheus.router import router as router_prometheus
 from app.users.models import Users
 from app.users.router import router as router_users
 from app.logger import logger
@@ -39,6 +41,13 @@ app = VersionedFastAPI(app,
 
 
 
+instrumentator = Instrumentator(
+    should_group_status_codes=False,
+    excluded_handlers=[".*admin.*", "/metrics"])
+
+instrumentator.instrument(app).expose(app)
+
+
 admin = Admin(app,engine,authentication_backend=authentication_backend)
 admin.add_view(UsersAdmin)
 admin.add_view(BookingsAdmin)
@@ -55,6 +64,7 @@ app.include_router(router_hotels)
 app.include_router(router_rooms)
 app.include_router(router_pages)
 app.include_router(router_images)
+app.include_router(router_prometheus)
 
 
 # Откуда можем принимать запросы
@@ -88,5 +98,4 @@ async def add_process_time_header(request: Request, call_next):
 async def startup():
     redis = aioredis.from_url("redis://localhost")
     FastAPICache.init(RedisBackend(redis), prefix="cache")
-
 

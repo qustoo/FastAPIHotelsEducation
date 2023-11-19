@@ -1,11 +1,22 @@
+from typing import List
+
 from pydantic import BaseModel
-from datetime import date
 
 
 class SHotel(BaseModel):
-    id : int
-    name : str
-    location : str
-    services : dict
-    rooms_quantity : int
-    image_ig : int
+    id: int
+    name: str
+    location: str
+    services: List[str]
+    rooms_quantity: int
+    image_id: int
+
+    class Config:
+        orm_mode = True
+
+
+class SHotelInfo(SHotel):
+    rooms_left: int
+
+    class Config:
+        orm_mode = True

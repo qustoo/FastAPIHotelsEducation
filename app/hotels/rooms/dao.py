@@ -23,7 +23,7 @@ class RoomDAO(BaseDAO):
     номера за весь период), rooms_left (количество оставшихся номеров).
     '''
     @classmethod
-    async def get_all_rooms_by_dates(cls,hotel_id: int,date_from : date, date_to :date):
+    async def get_rooms_by_times(cls,hotel_id: int,date_from : date, date_to :date):
         booked_rooms = (
             select(Bookings.room_id, Bookings.total_cost, func.count(Bookings.room_id).label("rooms_booked"))
             .select_from(Bookings)
@@ -46,7 +46,7 @@ class RoomDAO(BaseDAO):
         quary = (
             select(
                 Rooms.__table__.columns,
-                #(Rooms.price * (date_to - date_from).days).label("total_cost"),
+                (Rooms.price * (date_to - date_from).days).label("total_cost"),
                 (Rooms.quantity - func.coalesce(booked_rooms.c.rooms_booked, 0)).label("rooms_left"),
             )
             .join(booked_rooms, booked_rooms.c.room_id == Rooms.id, isouter=True)

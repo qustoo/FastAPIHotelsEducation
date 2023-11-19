@@ -11,6 +11,18 @@ class BookingDAO(BaseDAO):
     model = Bookings
 
     @classmethod
+    async def find_bookings_with_images(cls,user_id : int):
+        async with async_session_maker() as session:
+            quary = (
+            select(
+                Bookings.__table__.columns
+            ).join(Rooms, Rooms.id == Bookings.room_id, isouter=True)
+            .where(Bookings.user_id == user_id)
+            )
+            result = await session.execute(quary)
+            return result.mappings().all()
+
+    @classmethod
     async def add(
         cls,
         user_id: int,
