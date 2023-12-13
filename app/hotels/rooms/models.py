@@ -1,22 +1,19 @@
+from typing import Optional
 from sqlalchemy import JSON, Column, ForeignKey, Integer, String
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship,mapped_column,Mapped
 from app.database import Base
 
 
 class Rooms(Base):
     __tablename__ = "rooms"
-
-    id = Column(Integer, primary_key=True, nullable=False)
-    hotel_id = Column(ForeignKey("hotels.id"), nullable=False)
-    name = Column(String, nullable=False)
-    description = Column(String, nullable=True)
-    price = Column(Integer, nullable=False)
-    services = Column(JSON, nullable=True)
-    quantity = Column(Integer, nullable=False)
-    image_id = Column(Integer)
-
-    hotel = relationship("Hotels",back_populates="rooms")
-    booking = relationship("Bookings",back_populates="room")
+    id: Mapped[int] = mapped_column(Integer,primary_key=True,index=True)
+    hotel_id: Mapped[str] = mapped_column(ForeignKey('hotels.id'))
+    name: Mapped[str] = mapped_column(String(50),nullable=False)
+    description: Mapped[Optional[str]]
+    price: Mapped[int]
+    services: Mapped[Optional[list[str]]] = mapped_column(JSON,nullable=False)
+    quantity: Mapped[int]
+    image_id: Mapped[int]
 
     def __str__(self):
-        return f"Имя {self.name}"
+        return f"Комната {self.name}"
