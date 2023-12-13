@@ -11,7 +11,7 @@ class Hotels(Base):
     location: Mapped[str] = mapped_column(String(100))
     services: Mapped[Optional[list[str]]] = mapped_column(JSON)
     rooms_quantity: Mapped[int]
-    image_id: Mapped[str]
-    rooms = Mapped[list['Rooms']] = relationship(back_populates='hotel')
+    image_id: Mapped[str] = mapped_column(nullable=True)
+    rooms: Mapped[list['Rooms']] = relationship(back_populates='hotel')
     def __str__(self):
         return f"Отель {self.name} Локация {self.location[:20]}"
