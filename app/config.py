@@ -1,10 +1,10 @@
 from typing import Literal
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 from pydantic import root_validator
 
 class Settings(BaseSettings):
     MODE : Literal["DEV","TEST","PROD"]
-    LOG_LEVEL : Literal["DEBUG","INFO"]
+    LOG_LEVEL : Literal["DEBUG","INFO","WARNING","ERROR","CRITICAL"]
 
     DB_HOST : str
     DB_PORT : int
@@ -13,11 +13,18 @@ class Settings(BaseSettings):
     DB_NAME : str
     SECRET_KEY : str
     ALGORITHM : str
+    SMTP_HOST: str
+    SMTP_PORT: str
+    SMTP_USER: str
+    SMTP_PASS: str
 
-    @root_validator(skip_on_failure=True)
-    def get_database_url(cls,v):
-        v["DATABASE_URL"] =  f"postgresql+asyncpg://{v['DB_USER']}:{v['DB_PASS']}@{v['DB_HOST']}:{v['DB_PORT']}/{v['DB_NAME']}"
-        return v
+    REDIS_HOST: str
+    REDIS_PORT: str
+    SENTRY_URL: str
+
+    @property
+    def DATABASE_URL(self):
+        return f"postgresql+asyncpg://{self.DB_USER}:{self.DB_PASS}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
     
     TEST_DB_HOST : str
     TEST_DB_PORT : int
@@ -26,13 +33,12 @@ class Settings(BaseSettings):
     TEST_DB_NAME : str
 
 
-    @root_validator(skip_on_failure=True)
-    def get_test_database_url(cls,v):
+    @property
+    def TEST_DATABASE_URL(cls,v):
         v["TEST_DATABASE_URL"] =  f"postgresql+asyncpg://{v['TEST_DB_USER']}:{v['TEST_DB_PASS']}@{v['TEST_DB_HOST']}:{v['TEST_DB_PORT']}/{v['TEST_DB_NAME']}"
         return v
 
-    class Config:
-        env_file = ".env"
+    model_config = SettingsConfigDict(env_file='.env', env_file_encoding='utf-8')
 
 settings = Settings()
 
