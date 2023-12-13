@@ -8,13 +8,13 @@ class SRoom(BaseModel):
     hotel_id: int
     name: str
     description: Optional[str]
-    services: List[str]
+    services: Optional[List[str]]
     price: int
     quantity: int
     image_id: int
 
     class Config:
-        orm_mode = True
+        from_attributes  = True
 
 class SRoomInfo(SRoom):
     total_cost : int
@@ -22,4 +22,4 @@ class SRoomInfo(SRoom):
 
     
     class Config:
-        orm_mode = True
+        from_attributes  = True

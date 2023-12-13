@@ -12,11 +12,11 @@ class SHotel(BaseModel):
     image_id: int
 
     class Config:
-        orm_mode = True
+        from_attributes  = True
 
 
 class SHotelInfo(SHotel):
     rooms_left: int
 
     class Config:
-        orm_mode = True
+        from_attributes  = True
