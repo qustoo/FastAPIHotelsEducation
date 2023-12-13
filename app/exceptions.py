@@ -48,6 +48,11 @@ class IsToLongPeriodToBooked(BookingException):
     detail = "you cannot booked room more then 1 mounth"
 
 
+class NoSuchBookings(BookingException):
+    status_code = status.HTTP_404_NOT_FOUND
+    detail = "no one booking find"
+
+
 class ErrorOrderOfDates(BookingException):
     status_code = status.HTTP_400_BAD_REQUEST
     detail = "Incorrect order of dates"
