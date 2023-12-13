@@ -15,12 +15,12 @@ class Settings(BaseSettings):
     SECRET_KEY: str
     ALGORITHM: str
     SMTP_HOST: str
-    SMTP_PORT: str
+    SMTP_PORT: int
     SMTP_USER: str
     SMTP_PASS: str
 
     REDIS_HOST: str
-    REDIS_PORT: str
+    REDIS_PORT: int
     SENTRY_URL: str
 
     @property
