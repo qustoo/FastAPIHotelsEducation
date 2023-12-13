@@ -10,12 +10,12 @@ class BaseDAO:
         async with async_session_maker() as session:
             quary = select(cls.model).filter_by(id=model_id)
             result = await session.execute(quary)
-            return result.mappings().one_or_none()
+            return result.scalars().one_or_none()
 
     @classmethod
     async def find_one_or_none(cls, **filters):
         async with async_session_maker() as session:
-            query = select(cls.model).filter_by(**filters)
+            query = select(cls.model.__table__.columns).filter_by(**filters)
             result = await session.execute(query)
             return result.mappings().one_or_none()
 
@@ -29,13 +29,13 @@ class BaseDAO:
     @classmethod
     async def add(cls, **data):
         async with async_session_maker() as session:
-            query = insert(cls.model).values(**data).returning(cls.model.id)
+            query = insert(cls.model).values(**data)
             await session.execute(query)
-            await session.commit()  # фиксируем результаты
+            await session.commit()
 
     @classmethod
     async def remove(cls, **filters):
         async with async_session_maker() as session:
             query = delete(cls.model).filter_by(**filters)
             await session.execute(query)
-            await session.commit()  # фиксируем результаты
+            await session.commit()
