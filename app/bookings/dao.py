@@ -12,6 +12,17 @@ class BookingDAO(BaseDAO):
     model = Bookings
 
     @classmethod
+    async def find_bookings_by_room_id(cls, _room_id: int):
+        async with async_session_maker() as session:
+            quary = (
+                select(Bookings)
+                .join(Rooms, Rooms.id == Bookings.room_id, isouter=True)
+                .where(cls.model.room_id == _room_id)
+            )
+            result = await session.execute(quary)
+            return result.scalars().all()
+
+    @classmethod
     async def find_bookings_with_images(cls, user_id: int):
         async with async_session_maker() as session:
             quary = (
@@ -20,7 +31,7 @@ class BookingDAO(BaseDAO):
                 .where(Bookings.user_id == user_id)
             )
             result = await session.execute(quary)
-            return result.mappings().all()
+            return result.scalars().all()
 
     @classmethod
     async def add(
@@ -64,13 +75,6 @@ class BookingDAO(BaseDAO):
                     )
                     .cte("booked_rooms")
                 )
-
-                """
-                select rooms.quantity - count(booked_rooms.room_id)  from rooms --
-                left join booked_rooms using (id)
-                where rooms.id = 1
-                group by rooms.quantity,booked_rooms.room_id 
-                """
                 get_rooms_left = (
                     select(
                         (Rooms.quantity - func.count(booked_rooms.c.room_id)).label(
@@ -86,10 +90,8 @@ class BookingDAO(BaseDAO):
                 )
 
                 rooms_left = await session.execute(get_rooms_left)
-                # можно вызвыать Mappings ОДИН РАЗ для запроса
-                rooms_left = rooms_left.mappings().all()
-                count_rooms_left: int = rooms_left[0]["rooms_left"]
-                if None > 0:
+                rooms_left = rooms_left.scalar()
+                if rooms_left and rooms_left > 0:
                     get_price = select(Rooms.price).filter_by(id=room_id)
                     price = await session.execute(get_price)
                     price: int = price.scalar()
