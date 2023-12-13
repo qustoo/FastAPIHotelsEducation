@@ -14,12 +14,12 @@ class SRoom(BaseModel):
     image_id: int
 
     class Config:
-        from_attributes  = True
+        from_attributes = True
+
 
 class SRoomInfo(SRoom):
-    total_cost : int
+    total_cost: int
     rooms_left: int
 
-    
     class Config:
-        from_attributes  = True
+        from_attributes = True

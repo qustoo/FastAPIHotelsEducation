@@ -7,17 +7,17 @@ from sqlalchemy.exc import SQLAlchemyError
 from app.dao.base import BaseDAO
 from app.logger import logger
 
+
 class BookingDAO(BaseDAO):
     model = Bookings
 
     @classmethod
-    async def find_bookings_with_images(cls,user_id : int):
+    async def find_bookings_with_images(cls, user_id: int):
         async with async_session_maker() as session:
             quary = (
-            select(
-                Bookings.__table__.columns
-            ).join(Rooms, Rooms.id == Bookings.room_id, isouter=True)
-            .where(Bookings.user_id == user_id)
+                select(Bookings.__table__.columns)
+                .join(Rooms, Rooms.id == Bookings.room_id, isouter=True)
+                .where(Bookings.user_id == user_id)
             )
             result = await session.execute(quary)
             return result.mappings().all()
@@ -78,7 +78,9 @@ class BookingDAO(BaseDAO):
                         )
                     )
                     .select_from(Rooms)
-                    .join(booked_rooms, booked_rooms.c.room_id == Rooms.id, isouter=True)
+                    .join(
+                        booked_rooms, booked_rooms.c.room_id == Rooms.id, isouter=True
+                    )
                     .where(Rooms.id == room_id)
                     .group_by(Rooms.quantity, booked_rooms.c.room_id)
                 )
@@ -107,17 +109,16 @@ class BookingDAO(BaseDAO):
                     return new_booking.scalar()
                 else:
                     return None
-        except (SQLAlchemyError,Exception) as err:
-            if isinstance(err,SQLAlchemyError):
+        except (SQLAlchemyError, Exception) as err:
+            if isinstance(err, SQLAlchemyError):
                 msg = "database "
-            elif isinstance(err,Exception):
+            elif isinstance(err, Exception):
                 msg = "Unknown "
-            msg+="Exc: cannot add booking"
-            extra=  {
-                    "user_id" : user_id,
-                    "room_id" : room_id,
-                    "date_from" : date_from,
-                    "date_to" : date_to
-                    }
-            logger.error(msg,extra=extra,exc_info=True)
-            
+            msg += "Exc: cannot add booking"
+            extra = {
+                "user_id": user_id,
+                "room_id": room_id,
+                "date_from": date_from,
+                "date_to": date_to,
+            }
+            logger.error(msg, extra=extra, exc_info=True)

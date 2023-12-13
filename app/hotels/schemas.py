@@ -12,11 +12,11 @@ class SHotel(BaseModel):
     image_id: int
 
     class Config:
-        from_attributes  = True
+        from_attributes = True
 
 
 class SHotelInfo(SHotel):
     rooms_left: int
 
     class Config:
-        from_attributes  = True
+        from_attributes = True

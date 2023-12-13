@@ -5,19 +5,18 @@ from fastapi.templating import Jinja2Templates
 from app.hotels.router import get_hotels_by_location
 
 
-router = APIRouter(
-    prefix='/pages',
-    tags= ['Фронт']
-)
+router = APIRouter(prefix="/pages", tags=["Фронт"])
 
-templates  = Jinja2Templates(directory="app/templates")
+templates = Jinja2Templates(directory="app/templates")
 
 
 @router.get("/hotels")
-async def get_hotels_page(request: Request,
-                          hotels = Depends(get_hotels_by_location)):
+async def get_hotels_page(request: Request, hotels=Depends(get_hotels_by_location)):
     print(hotels)
-    return templates.TemplateResponse(name="hotels.html", context={"request": request, "hotels" : hotels})
+    return templates.TemplateResponse(
+        name="hotels.html", context={"request": request, "hotels": hotels}
+    )
+
 
 @router.get("/login", response_class=HTMLResponse)
 async def get_login_page(request: Request):
