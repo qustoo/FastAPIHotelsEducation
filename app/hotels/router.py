@@ -15,12 +15,19 @@ router = APIRouter(prefix="/hotels", tags=["Hotels"])
 async def get_hotels():
     return await HotelDAO.get_all_hotels()
 
+@router.get("/id/{hotel_id}", include_in_schema=True)
+async def get_hotel_by_id(
+    hotel_id: int,
+) -> Optional[SHotel]:
+    return await HotelDAO.find_one_or_none(id=hotel_id)
+
+
 
 @router.get(
     "/bylocation", response_model=list[SHotelInfo], response_model_exclude_none=True
 )
 # @cache(expire=60) redis cache
-async def get_hotels_by_location(
+async def get_hotels_by_location_and_time(
     date_from: Annotated[
         date, Query(..., description=f"Например, {datetime.now().date()}")
     ] = date(2023, 1, 1),
