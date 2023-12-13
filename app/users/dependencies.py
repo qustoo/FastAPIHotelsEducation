@@ -26,9 +26,9 @@ async def get_current_user(
         raise IncorrectTokenFormatException
     expire: str = payload.get("exp")
     if not expire or (int(expire) < datetime.utcnow().timestamp()):
-        raise UserIsNotPresentException
+        raise TokenAbsentException
     user_id: str = payload.get("sub")
     user = await UsersDAO.find_by_id(int(user_id))
     if not user:
-        raise IncorrectTokenFormatException
+        raise UserIsNotPresentException
     return user
