@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 from pydantic import BaseModel
 
@@ -9,7 +9,7 @@ class SHotel(BaseModel):
     location: str
     services: List[str]
     rooms_quantity: int
-    image_id: int
+    image_id: Optional[int]
 
     class Config:
         from_attributes = True

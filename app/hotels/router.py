@@ -1,6 +1,6 @@
 import asyncio
 from datetime import date, datetime, timedelta
-from typing import List
+from typing import List, Annotated, Optional
 from fastapi import APIRouter, Depends, Query, Request
 from app.exceptions import ErrorOrderOfDates, IsToLongPeriodToBooked
 from app.hotels.schemas import SHotel, SHotelInfo
@@ -11,24 +11,30 @@ from app.hotels.dao import HotelDAO
 router = APIRouter(prefix="/hotels", tags=["Hotels"])
 
 
-@router.get("/all")
+@router.get("/all", response_model=List[SHotel], response_model_exclude_none=True)
 async def get_hotels():
     return await HotelDAO.get_all_hotels()
 
 
-@router.get("/bylocation")
+@router.get(
+    "/bylocation", response_model=list[SHotelInfo], response_model_exclude_none=True
+)
 # @cache(expire=60) redis cache
 async def get_hotels_by_location(
-    location: str,
-    date_from: date = Query(..., description=f"Например, {datetime.now().date()}"),
-    date_to: date = Query(
-        ..., description=f"Например, {(datetime.now() + timedelta(days=14)).date()}"
-    ),
-) -> list[SHotelInfo]:
+    date_from: Annotated[
+        date, Query(..., description=f"Например, {datetime.now().date()}")
+    ] = date(2023, 1, 1),
+    date_to: Annotated[
+        date,
+        Query(
+            ..., description=f"Например, {(datetime.now() + timedelta(days=14)).date()}"
+        ),
+    ] = date(2023, 1, 15),
+    location: str = "Алтай",
+):
     if date_from > date_to:
         raise ErrorOrderOfDates
     if (date_to - date_from).days > 31:
         raise IsToLongPeriodToBooked
-    # await asyncio.sleep(2) # в первый раз будем ждать, затем результат кэшируется и ответ моментальный в течении 60 секунд
     hotels = await HotelDAO.get_hotels_by_location(location, date_from, date_to)
     return hotels

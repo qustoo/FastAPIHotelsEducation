@@ -17,7 +17,7 @@ class HotelDAO(BaseDAO):
         async with async_session_maker() as session:
             all_hotels = select(cls.model)
             result = await session.execute(all_hotels)
-            return result.mappings().all()
+            return result.scalars().all()
 
     # поиск по паттерну региона, like('%location%')
     @classmethod
@@ -63,7 +63,7 @@ class HotelDAO(BaseDAO):
             .where(
                 and_(
                     booked_hotels.c.rooms_left > 0,
-                    Hotels.location.like(f"%{location}%"),
+                    Hotels.location.like(f"%{location.capitalize()}%"),
                 )
             )
         )
