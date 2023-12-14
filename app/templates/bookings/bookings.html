@@ -3,7 +3,7 @@
 {% block head %}
     <script>
         async function loginUser() {
-            const url = "http://localhost:8000/api/v1/auth/logout";
+            const url = "http://localhost:8000/auth/logout";
             const bookingId = document.getElementById("bookingId").value;
 
             await fetch(url, {
@@ -32,7 +32,7 @@
                 <span>{{ booking.hotel_name }}</span>
             </div>
             <div class="flex shadow-md mb-5 w-fit pr-4">
-                <img src="{{ url_for('static', path='images/' + booking.image_id|string + '.webp') }}" alt="Комната" width="250">
+                <img src="{{ url_for('static', path='images/some_hotel.webp') }}" alt="Комната" width="250">
                 <div class="px-4 py-3">
                     <div class="pl-1 font-bold">{{ booking.name }}</div>
                     <hr class="my-2">

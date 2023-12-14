@@ -10,7 +10,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         async function logoutUser() {
-            const url = "http://localhost:8000/api/v1/auth/logout";
+            const url = "http://localhost:8000/auth/logout";
 
             await fetch(url, {
                 method: 'POST',
@@ -28,8 +28,7 @@
 <nav class="mb-10">
     <div class="flex justify-between px-8 py-3 text-2xl">
       <ul>
-        <!-- Да, тут захардкожены значения. Я знаю :D -->
-        <li><a href="/pages/hotels/Алтай?date_to=2024-05-01&date_from=2024-04-17">🏩 Набронировал</a></li>
+        <li><a href="/pages/hotels/Алтай?date_to=2023-01-15&date_from=2023-01-01">🏩 Брони</a></li>
       </ul>
       <ul class="flex gap-x-5">
         <li><a href="/pages/bookings">Мои брони</a></li>

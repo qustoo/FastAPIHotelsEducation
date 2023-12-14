@@ -6,11 +6,11 @@
             const wrongCredentialsSpan = document.getElementById("wrong_credentials");
             wrongCredentialsSpan.textContent = "";
 
-            const url = "http://localhost:8000/api/v1/auth/login";
+            // const url = ;
             const email = document.getElementById("email").value;
             const password = document.getElementById("password").value;
 
-            await fetch(url, {
+            await fetch("http://localhost:8000/auth/login", {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'}, 
                 body: JSON.stringify({email: email, password: password}),
@@ -27,7 +27,7 @@
 
 {% block content %}
     <div class="flex flex-col items-center justify-center h-screen">
-        <span class="font-bold text-3xl mb-10">🏩 Набронировал</span>
+        <span class="font-bold text-3xl mb-10">🏩 Брони</span>
         <div>
             <div class="flex flex-col items-start text-xl mb-5">
                 <label for="email" class="mb-1">Email</label>

@@ -3,11 +3,11 @@
 {% block head %}
     <script>
         async function registerUser() {
-            const url = "http://localhost:8000/api/v1/auth/register";
+            const url = "http://localhost:8000/auth/register";
             const formData = new FormData();
             formData.append('email', document.getElementById("email").value);
             formData.append('password', document.getElementById("password").value);
-
+            print(document.getElementById("email").value)
             await fetch(url, {
                 method: 'POST',
                 body: formData,
