@@ -42,11 +42,9 @@
                             <span class="pl-1 mb-2">Осталось комнат:&nbsp;{{ room.rooms_left }} из {{ room.quantity }}</span>
                         </div>
                         <div class="flex justify-top flex-col items-center">
-                            <!-- Total cost было бы хорошо отформатировать 12345 -> 12 345 -->
                             <span class="font-bold text-4xl">{{ room.total_cost }}</span>
                             <span class="mb-1 text-xl">за {{ booking_length }} ночей</span>
                             <span class="mb-2">{{ room.price }} за ночь</span>
-                            <!-- Скрытая POST форма. Пришлось творить дичь в отсутствии JS :D -->
                             <form action="/pages/successful_booking" method="POST">
                                 <div class="flex flex-col items-center">
                                     <span>С {{ date_from_formatted }}</span>
