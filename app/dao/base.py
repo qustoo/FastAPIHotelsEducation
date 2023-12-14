@@ -15,9 +15,9 @@ class BaseDAO:
     @classmethod
     async def find_one_or_none(cls, **filters):
         async with async_session_maker() as session:
-            query = select(cls.model.__table__.columns).filter_by(**filters)
+            query = select(cls.model).filter_by(**filters)
             result = await session.execute(query)
-            return result.mappings().one_or_none()
+            return result.scalars().one_or_none()
 
     @classmethod
     async def find_all(cls, **filters):

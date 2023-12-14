@@ -25,6 +25,7 @@ async def authenticate_user(_email: EmailStr, password: str):
 
 
 def create_access_token(data: dict) -> str:
+    print(data)
     to_encode = data.copy()
     expire = datetime.utcnow() + timedelta(minutes=30)
     to_encode.update({"exp": expire})

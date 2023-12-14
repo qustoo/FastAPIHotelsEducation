@@ -68,7 +68,8 @@ app.include_router(router_prometheus)
 
 # Откуда можем принимать запросы
 origins = [
-    "http://localhost:3000",
+    "http://127.0.0.1:8000",
+
 ]
 
 app.add_middleware(
@@ -80,7 +81,7 @@ app.add_middleware(
         "Content-Type",
         "Set-Cookie",
         "Access-Control-Allow-Origin",
-        "Access-Control-Allow-Headers",
+        "Access-Control-Allow-Origin",
         "Authorization",
     ],
 )

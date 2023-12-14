@@ -38,7 +38,8 @@ async def get_bookings(
 ) -> list[SBookingInfo]:
     bookings = await BookingDAO.find_all(user_id=user.id)
     if not bookings:
-        raise NoSuchBookings
+        return []
+        # raise NoSuchBookings
     return bookings
 
 
