@@ -1,10 +1,10 @@
 import time
-from typing import Optional
-
+import sentry_sdk
 from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from h11 import Request
+from app.config import settings
 from fastapi_cache import FastAPICache
 from fastapi_cache.backends.redis import RedisBackend
 from fastapi_cache.decorator import cache
@@ -27,7 +27,7 @@ from app.users.models import Users
 from app.users.router import router as router_users
 from app.logger import logger
 
-app = FastAPI()
+app = FastAPI(title="Bookings API",version='0.0.1')
 
 
 app = VersionedFastAPI(
@@ -40,6 +40,11 @@ app = VersionedFastAPI(
     # ]
 )
 
+if settings.MODE != "DEV":
+    sentry_sdk.init(
+        dsn=settings.SENTRY_DSN,
+        traces_sample_rate=1.0,
+    )
 
 instrumentator = Instrumentator(
     should_group_status_codes=False, excluded_handlers=[".*admin.*", "/metrics"]
@@ -69,7 +74,6 @@ app.include_router(router_prometheus)
 # Откуда можем принимать запросы
 origins = [
     "http://127.0.0.1:8000",
-
 ]
 
 app.add_middleware(
@@ -99,5 +103,5 @@ async def add_process_time_header(request: Request, call_next):
 
 @app.on_event("startup")
 async def startup():
-    redis = aioredis.from_url("redis://localhost")
+    redis = aioredis.from_url(f"redis://{settings.REDIS_HOST}:{settings.REDIS_PORT}")
     FastAPICache.init(RedisBackend(redis), prefix="cache")
