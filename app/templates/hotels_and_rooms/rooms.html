@@ -3,7 +3,7 @@
 {% block head %}
     <script>
         async function loginUser() {
-            const url = "http://localhost:8000/api/bookings";
+            const url = "http://localhost:8000/bookings";
             const bookingId = document.getElementById("bookingId").value;
 
             await fetch(url, {

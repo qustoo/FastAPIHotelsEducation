@@ -98,12 +98,12 @@ celery --app=app.tasks.celery:celery flower
 
 
 ## Screenshots
-- All hotels in Swagger
+- JSON all hotels
 ![All hotels in Swagger](files_to_readme/all_hotels.png)
 - Login page
 ![Login page](files_to_readme/login.png)
-- Bookings
-![Bookings](files_to_readme/bookings.png)
-- All hotels at frontend
-![All hotels at frontend](files_to_readme/all_hotels_frontend.png)
+- Hotels
+![](files_to_readme/hotels.png)
+- Booking room
+![](files_to_readme/booking_room.png)
 
